@@ -35,3 +35,7 @@ The exported GLB must contain no images, textures, material variants, or named l
 Next.js, React, React Three Fiber, Three.js and Tailwind are used under their distributed free software licenses; exact versions are recorded in `package-lock.json`. GSAP's installed README expressly permits free commercial use under its Standard No Charge license (https://gsap.com/standard-license). Only core GSAP and ScrollTrigger are used. GSAP is not described as MIT-licensed. No paid APIs, services, fonts, environments or processing tools are required.
 
 The live renderer additionally tunes the replacement graphite material to a darker satin finish and softens alloy roughness. Studio posters are matching views of the same unbranded geometry, with a separately rendered studio lighting setup. Final GLB size: **5,365,376 bytes**.
+
+## Locally hosted typography
+
+The cinematic presentation adds unmodified Manrope variable and Instrument Serif italic font files from Google's official font repository, under SIL OFL 1.1. Full copyright/license texts are distributed under `public/licenses/`. Exact source URLs and local filenames are listed in [cinematic studio notes](CINEMATIC-STUDIO.md#assets-and-typography). The vehicle model and poster files are unchanged.

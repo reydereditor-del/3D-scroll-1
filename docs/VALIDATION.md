@@ -1,5 +1,7 @@
 # Validation
 
+Historical baseline checks are recorded below. For the current cinematic presentation and its actual browser evidence, see [CINEMATIC-STUDIO.md](CINEMATIC-STUDIO.md).
+
 ## Commands executed successfully
 
 - `npm ci --no-audit --no-fund`: lockfile installation verified with Node 24.19.0 / npm 11.9.0.

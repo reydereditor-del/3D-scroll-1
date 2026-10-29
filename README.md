@@ -24,9 +24,9 @@ The scripts use Next.js's supported webpack mode because this cloud environment 
 
 ## Experience
 
-On desktop at 1024px and wider, one pinned stage and one GSAP master timeline coordinate camera position, camera target and chapter text. The canvas renders on demand. Chapter controls navigate to the corresponding scroll positions. The final CTA replays the concept.
+On desktop at 1024px and wider, one pinned stage and one GSAP master timeline coordinate an orbital camera, moving studio light, and masked chapter text. A short lighting reveal opens the scene; composed holds separate the side, rear, and close detail views. The chapter rail follows scroll progress, and its controls land on each completed composition. The final CTA returns to the opening view. The canvas renders on demand. See [cinematic studio notes and browser regression instructions](docs/CINEMATIC-STUDIO.md).
 
-Mobile and reduced-motion modes use matching pre-rendered vehicle stills and normal document flow, without requesting the GLB. Asset/loading/WebGL failure leaves a studio poster visible; text remains independent of WebGL. The scene has capped pixel ratio, no realtime shadows, no postprocessing and no external environment download.
+Mobile and reduced-motion modes use matching pre-rendered vehicle stills and normal document flow, without requesting the GLB. Mobile has light text reveals; reduced motion keeps all presentation static. Manrope and Instrument Serif are locally hosted under SIL OFL 1.1; font source and licenses are documented in the cinematic studio notes. Asset/loading/WebGL failure leaves a studio poster visible; text remains independent of WebGL. The scene has capped pixel ratio, no realtime shadows, no postprocessing and no external environment download.
 
 ## Vehicle rights
 

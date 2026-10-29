@@ -1,0 +1,46 @@
+{
+  "browser": "154.0.8037.57",
+  "results": [
+    {
+      "check": "Computed CTA contrast",
+      "normal": 5.023147131652023,
+      "hover": 6.113318858134565
+    },
+    {
+      "check": "mobile layout and expanded credits",
+      "contentBottom": 460.375,
+      "footerTop": 632.375,
+      "footerBottom": 843.75,
+      "sectionBottom": 843.75,
+      "sections": 5,
+      "models": 0
+    },
+    {
+      "check": "tablet layout and expanded credits",
+      "contentBottom": 560.09375,
+      "footerTop": 706.90625,
+      "footerBottom": 900.28125,
+      "sectionBottom": 900.28125,
+      "sections": 5,
+      "models": 0
+    },
+    {
+      "check": "narrow layout and expanded credits",
+      "contentBottom": 334.421875,
+      "footerTop": 448.125,
+      "footerBottom": 719.5,
+      "sectionBottom": 719.5,
+      "sections": 5,
+      "models": 0
+    },
+    {
+      "check": "reduced layout and expanded credits",
+      "contentBottom": 707.5,
+      "footerTop": 824.625,
+      "footerBottom": 1000,
+      "sectionBottom": 1000,
+      "sections": 5,
+      "models": 0
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # 3D visibility and scroll regression — 2026-10-30
 
+This records the preceding focused lifecycle fix. For the subsequently approved cinematic presentation, see [CINEMATIC-STUDIO.md](CINEMATIC-STUDIO.md).
+
 ## Diagnosis
 
 Base: `main`, `2b58ad7aeed41c4e8624c059e411ae54b42fac4b`.
