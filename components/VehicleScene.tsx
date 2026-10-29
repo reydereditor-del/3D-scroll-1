@@ -41,8 +41,15 @@ function Vehicle({ onReady, onError }: {onReady:()=>void; onError:()=>void}) {
   }, [invalidate, onReady, onError]);
   return model ? <primitive object={model} /> : null;
 }
-function Studio({ state, register }: {state:CameraState; register:(f:()=>void)=>void}) {
+function Studio({ state, register, onError }: {state:CameraState; register:(f:()=>void)=>void; onError:()=>void}) {
   const { camera, invalidate, gl, scene, size } = useThree();
+  useEffect(() => {
+    const canvas = gl.domElement;
+    canvas.addEventListener('webglcontextlost', onError);
+    // R3F deliberately loses its context on unmount. That is teardown, not
+    // an asset failure, and must not disable the next desktop scene.
+    return () => canvas.removeEventListener('webglcontextlost', onError);
+  }, [gl, onError]);
   useEffect(() => {
     const target = new Vector3();
     const update = () => {
@@ -74,10 +81,8 @@ function Studio({ state, register }: {state:CameraState; register:(f:()=>void)=>
   </>;
 }
 export default function VehicleScene({state,register,onReady,onError}: {state:CameraState; register:(f:()=>void)=>void; onReady:()=>void; onError:()=>void}) {
-  return <Canvas aria-hidden="true" frameloop="demand" dpr={[1,1.5]} camera={{position:[state.x,state.y,state.z],fov:32,near:.1,far:250}} gl={{antialias:true,alpha:true,powerPreference:'high-performance'}} onCreated={({gl})=>{
-    gl.domElement.addEventListener('webglcontextlost',onError,{once:true});
-  }} fallback={null}>
-    <Studio state={state} register={register}/>
+  return <Canvas aria-hidden="true" frameloop="demand" dpr={[1,1.5]} camera={{position:[state.x,state.y,state.z],fov:32,near:.1,far:250}} gl={{antialias:true,alpha:true,powerPreference:'high-performance'}} fallback={null}>
+    <Studio state={state} register={register} onError={onError}/>
     <Suspense fallback={null}><Vehicle onReady={onReady} onError={onError}/></Suspense>
   </Canvas>;
 }

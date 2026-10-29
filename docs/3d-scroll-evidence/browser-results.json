@@ -1,0 +1,31 @@
+{
+  "browser": "154.0.8037.57",
+  "viewport": "1440x1000",
+  "rendering": "Chromium SwiftShader software WebGL2",
+  "results": [
+    "Forward/reverse scrolling changes canvas pixels and returns to identical camera frames at y=2000 and y=0.",
+    "Native wheel input scrolls forward and reverse over the canvas.",
+    "Mid-story reload restored scroll 3000.",
+    "Tablet→desktop and two reduced-motion→desktop cycles recover one live canvas/one pin; delayed model retains visible poster.",
+    "Genuine WebGL context loss retains visible poster.",
+    "mobile: fallback passed; model requests=0",
+    "tablet: fallback passed; model requests=0",
+    "reduced: fallback passed; model requests=0",
+    "no-webgl: fallback passed; model requests=0",
+    "model-error: fallback passed; model requests=1"
+  ],
+  "errors": [],
+  "failures": [],
+  "loads": 5,
+  "hashes": {
+    "hero": "8507a0ff00661616c327fd89fbdd43989319e69699fc9c0aee8b5314cf410ff4",
+    "forward-1000": "c025d62dc1b3b1f32f246c4ea12f702eeb64b4884d566070ee341f8c869153b1",
+    "forward-2000": "ef8722ea7df9d45b975d56533a31cb75caaaab90de92734971244384d9f74c62",
+    "forward-3000": "582957943d61d14f4a8fbc028d3be752ef4688a15060231d7fcf4d0651edbf49",
+    "forward-4000": "f5bb7eeb5edcee5b182873724989ce5fa0fc4a8c6a9eeabab6e780148f1a5a30",
+    "reverse-3000": "582957943d61d14f4a8fbc028d3be752ef4688a15060231d7fcf4d0651edbf49",
+    "reverse-2000": "ef8722ea7df9d45b975d56533a31cb75caaaab90de92734971244384d9f74c62",
+    "reverse-1000": "c025d62dc1b3b1f32f246c4ea12f702eeb64b4884d566070ee341f8c869153b1",
+    "reverse-hero": "8507a0ff00661616c327fd89fbdd43989319e69699fc9c0aee8b5314cf410ff4"
+  }
+}

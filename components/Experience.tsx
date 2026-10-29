@@ -53,8 +53,11 @@ export default function Experience(){
       const gl=canvas.getContext('webgl2');
       const supported=!!gl;
       gl?.getExtension('WEBGL_lose_context')?.loseContext();
+      // Every desktop entry owns a fresh renderer and model load. Do not carry
+      // readiness or a previous failure across responsive/reduced-motion modes.
+      setAssetFailed(false);
+      setStatus(supported?'loading':'fallback');
       setLive(supported);
-      if(!supported)setStatus('fallback');
       const panels=gsap.utils.toArray<HTMLElement>('.chapter',root.current);
       gsap.set(panels.slice(1),{autoAlpha:0,y:35});
       const tl=gsap.timeline({scrollTrigger:{trigger:stage.current,start:'top top',end:()=>'+='+window.innerHeight*5.5,pin:true,scrub:true,invalidateOnRefresh:true,onUpdate:self=>setActive(Math.min(3,Math.floor(self.progress*4)))}});
