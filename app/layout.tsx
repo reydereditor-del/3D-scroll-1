@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+import { assetPath } from '@/lib/assetPath';
 import './globals.css';
 const sans = localFont({ src: '../public/fonts/manrope-variable.ttf', variable: '--font-sans', weight: '200 800', display: 'swap' });
 const serif = localFont({ src: '../public/fonts/instrument-serif-italic.ttf', variable: '--font-editorial', weight: '400', style: 'italic', display: 'swap' });
 export const metadata: Metadata = {
-  icons: { icon: '/icon.svg' },
+  icons: { icon: assetPath('/icon.svg') },
   title: 'NOCTURNE — A study in motion',
   description: 'An independent automotive design study. Explore an unbranded concept through form, presence, and detail.',
 };

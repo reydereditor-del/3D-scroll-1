@@ -2,6 +2,8 @@
 
 A fictional, unbranded portfolio demo with exactly five sections: Hero, Design, Performance, Details and Final CTA. Built with Next.js, TypeScript, Tailwind CSS, GSAP ScrollTrigger, Three.js and React Three Fiber.
 
+Live preview: https://reydereditor-del.github.io/3D-scroll-1/ — see [viewing and deployment instructions](docs/DEPLOYMENT.md).
+
 ## Run
 
 Requires Node.js 20.9+ (validated here with Node 24) and npm.

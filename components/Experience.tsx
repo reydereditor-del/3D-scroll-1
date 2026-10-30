@@ -6,6 +6,7 @@ import { Component, type ReactNode, useCallback, useEffect, useRef, useState } f
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { StudioState } from './VehicleScene';
+import { assetPath } from '@/lib/assetPath';
 
 const VehicleScene = dynamic(() => import('./VehicleScene'), { ssr: false });
 const chapters = ['Hero', 'Design', 'Performance', 'Details'];
@@ -169,7 +170,7 @@ export default function Experience() {
     </header>
     <div ref={stage} className={`experience-stage ${live ? 'is-live' : ''}`}>
       <div role="img" aria-label={`Unbranded graphite concept car — ${chapters[active]} studio view`} className={`scene-layer ${status === 'ready' ? 'scene-ready' : ''}`}>
-        <img className="scene-poster" src={`/images/${['hero', 'design', 'performance', 'details'][active]}.webp`} alt="" fetchPriority="high" />
+        <img className="scene-poster" src={assetPath(`/images/${['hero', 'design', 'performance', 'details'][active]}.webp`)} alt="" fetchPriority="high" />
         {live && !assetFailed && <SceneBoundary onError={onError}><VehicleScene state={studio} register={register} onReady={onReady} onError={onError} /></SceneBoundary>}
       </div>
       <div className="stage-vignette" />
@@ -178,28 +179,28 @@ export default function Experience() {
           <div className="eyebrow"><span className="red-line" /> AUTOMOTIVE EXPLORATION — VOL. 01</div>
           <h1 id="hero-title"><Line>A study</Line><Line>in <em>motion.</em></Line></h1>
           <div className="hero-bottom"><p>Not built to blend in.<br />An exploration of form, light, and presence.</p><button onClick={() => go(1)} className="text-link">EXPLORE THE CONCEPT <span><Arrow down /></span></button></div>
-          <img className="mobile-car" src="/images/hero.webp" alt="Unbranded graphite concept car, front three-quarter studio view" fetchPriority="high" />
+          <img className="mobile-car" src={assetPath('/images/hero.webp')} alt="Unbranded graphite concept car, front three-quarter studio view" fetchPriority="high" />
         </section>
         <section id="design" className="chapter editorial design" aria-labelledby="design-title">
           <div className="eyebrow"><span className="red-line" /> 01 / DESIGN</div>
           <h2 id="design-title"><Line>Less noise.</Line><Line><em>More presence.</em></Line></h2>
           <p>A continuous silhouette. A deliberate line.<br />Nothing added without a reason.</p>
           <div className="chapter-note"><span>FORM LANGUAGE</span><span>SCULPTED / UNBROKEN</span></div>
-          <img className="mobile-car" src="/images/design.webp" alt="Side profile of the unbranded concept car" loading="lazy" />
+          <img className="mobile-car" src={assetPath('/images/design.webp')} alt="Side profile of the unbranded concept car" loading="lazy" />
         </section>
         <section id="performance" className="chapter editorial performance" aria-labelledby="performance-title">
           <div className="eyebrow"><span className="red-line" /> 02 / PERFORMANCE</div>
           <h2 id="performance-title"><Line>Motion.</Line><Line><em>Before movement.</em></Line></h2>
           <p>A low stance. A purposeful proportion.<br />The visual expression of energy, held still.</p>
           <div className="chapter-note"><span>A DESIGN EXPLORATION</span><span>NO PERFORMANCE CLAIMS</span></div>
-          <img className="mobile-car" src="/images/performance.webp" alt="Low rear three-quarter view of the concept car" loading="lazy" />
+          <img className="mobile-car" src={assetPath('/images/performance.webp')} alt="Low rear three-quarter view of the concept car" loading="lazy" />
         </section>
         <section id="details" className="chapter editorial details" aria-labelledby="details-title">
           <div className="eyebrow"><span className="red-line" /> 03 / DETAILS</div>
           <h2 id="details-title"><Line>The closer</Line><Line><em>you look.</em></Line></h2>
           <p>Graphite surfaces meet a precise edge of light.<br />A quiet dialogue between material and form.</p>
           <div className="chapter-note detail-note"><span>MATERIAL STUDY</span><span>GRAPHITE / LIGHT / SHADOW</span></div>
-          <img className="mobile-car" src="/images/details.webp" alt="Close studio framing of the front bodywork and wheel" loading="lazy" />
+          <img className="mobile-car" src={assetPath('/images/details.webp')} alt="Close studio framing of the front bodywork and wheel" loading="lazy" />
         </section>
       </div>
       <nav className="chapter-nav" aria-label="Concept chapters">
@@ -215,7 +216,7 @@ export default function Experience() {
       </div>
     </div>
     <section id="final" className="final-section" aria-labelledby="final-title">
-      <img src="/images/hero.webp" alt="The graphite concept in its studio setting" loading="lazy" />
+      <img src={assetPath('/images/hero.webp')} alt="The graphite concept in its studio setting" loading="lazy" />
       <div className="final-content">
         <div className="eyebrow"><span className="red-line" /> THE STUDY CONTINUES</div>
         <h2 id="final-title"><Line>Leave an</Line><Line><em>impression.</em></Line></h2>
@@ -224,7 +225,7 @@ export default function Experience() {
       <footer className="final-footer">
         <span className="wordmark">N<span className="mark-slash">/</span> NOCTURNE</span>
         <p>An independent, fictional automotive study.<br />Not affiliated with a vehicle manufacturer.</p>
-        <details className="credits"><summary>ASSET CREDITS +</summary><p>“Car Concept” by Eric Chadwick, © 2024 Darmstadt Graphics Group GmbH. <a href="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CarConcept">Source</a> · <a href="/licenses/carconcept-CC-BY-4.0.txt">CC BY 4.0</a>. Modified: marks and original textures removed; materials replaced; normalized and optimized. No endorsement implied.</p></details>
+        <details className="credits"><summary>ASSET CREDITS +</summary><p>“Car Concept” by Eric Chadwick, © 2024 Darmstadt Graphics Group GmbH. <a href="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CarConcept">Source</a> · <a href={assetPath('/licenses/carconcept-CC-BY-4.0.txt')}>CC BY 4.0</a>. Modified: marks and original textures removed; materials replaced; normalized and optimized. No endorsement implied.</p></details>
       </footer>
     </section>
   </main>;

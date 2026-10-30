@@ -4,6 +4,7 @@
 import { Canvas, useThree } from '@react-three/fiber';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { assetPath } from '@/lib/assetPath';
 import {
   Color, DirectionalLight, Group, Mesh, MeshBasicMaterial, MeshStandardMaterial,
   PerspectiveCamera, PlaneGeometry, PMREMGenerator, Scene, Vector3,
@@ -42,7 +43,7 @@ function Vehicle({ onReady, onError }: Pick<SceneProps, 'onReady' | 'onError'>) 
       geometries.forEach(geometry => geometry.dispose());
       materials.forEach(material => material.dispose());
     };
-    new GLTFLoader().load('/models/concept.glb', gltf => {
+    new GLTFLoader().load(assetPath('/models/concept.glb'), gltf => {
       if (disposed) { dispose(gltf.scene); return; }
       loaded = gltf.scene;
       loaded.traverse(object => {
