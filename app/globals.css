@@ -32,6 +32,10 @@ svg { display: block; }
 .header-link span { color: var(--red); transition: transform .35s ease; }
 .header-link:hover span { transform: translate(3px, -3px); }
 .header-link:hover::after { transform: scaleX(.7); background: var(--red); }
+.motion-controls { display: flex; align-items: center; gap: 16px; }
+.motion-controls > span { color: var(--muted); font-size: 10px; }
+.motion-controls button { min-height: 44px; padding: 10px 15px; background: var(--paper); color: var(--ink); font-size: 10px; letter-spacing: .06em; }
+.motion-controls button:hover { background: #fff; }
 
 .experience-stage { position: relative; min-height: 100svh; overflow: hidden; background: var(--ink); }
 .scene-layer { position: absolute; inset: 0; pointer-events: none; }
@@ -129,40 +133,40 @@ h1 em { font-size: 1.16em; }
 }
 
 @media (max-width: 1023px), (prefers-reduced-motion: reduce) {
-  .site-header { height: 86px; padding: 0 6vw; }
-  .header-center { display: none; }
-  .header-link { font-size: 8px; gap: 20px; }
-  .wordmark { font-size: 14px; }
-  .mark-slash { margin-right: 10px; }
-  .scene-layer, .stage-vignette, .chapter-nav { display: none; }
-  .experience-stage { overflow: visible; }
-  .chapter-grid { display: block; min-height: 0; }
-  .chapter { visibility: visible !important; opacity: 1 !important; transform: none !important; min-height: 0; padding: 75px 7vw 36px; overflow: hidden; border-bottom: 1px solid #ffffff18; pointer-events: auto; }
-  .chapter.hero { padding-top: 150px; }
-  .eyebrow { font-size: 8px; letter-spacing: .15em; gap: 11px; }
-  .red-line { width: 20px; }
-  h1 { font-size: clamp(68px, 13vw, 116px); margin-top: 32px; }
-  .hero-bottom { position: relative; inset: auto; display: block; margin-top: 28px; }
-  .hero-bottom p, .editorial > p { font-size: 12px; }
-  .text-link { margin-top: 25px; font-size: 8px; gap: 22px; }
-  .mobile-car { display: block; width: calc(100% + 14vw); max-width: none; margin: 32px -7vw -20px; height: auto; aspect-ratio: 5 / 3; object-fit: cover; }
-  .editorial h2, .performance h2 { font-size: clamp(46px, 8vw, 78px); margin: 27px 0; }
-  .chapter-note { margin-top: 28px; font-size: 8px; }
-  .stage-footer { position: relative; inset: auto; min-height: 70px; padding: 20px 7vw; border: 0; font-size: 6px; letter-spacing: .1em; }
-  .scroll-cue { display: none; }
-  .final-section { min-height: 790px; padding: 105px 7vw 0; flex-direction: column; align-items: stretch; justify-content: space-between; }
-  .final-section > img { object-position: 60% center; opacity: .28; }
-  .final-content h2 { font-size: clamp(65px, 11vw, 106px); }
-  .final-footer { position: relative; inset: auto; margin-top: 110px; flex-wrap: wrap; gap: 24px; padding: 28px 0; }
-  .final-footer > p { font-size: 8px; }
-  .credits { width: 100%; max-width: none; }
-  .cta { gap: 35px; font-size: 8px; }
+  :where(main:not([data-motion="full"])) .site-header { height: 86px; padding: 0 6vw; }
+  :where(main:not([data-motion="full"])) .header-center { display: none; }
+  :where(main:not([data-motion="full"])) .header-link { font-size: 8px; gap: 20px; }
+  :where(main:not([data-motion="full"])) .wordmark { font-size: 14px; }
+  :where(main:not([data-motion="full"])) .mark-slash { margin-right: 10px; }
+  :where(main:not([data-motion="full"])) .scene-layer, :where(main:not([data-motion="full"])) .stage-vignette, :where(main:not([data-motion="full"])) .chapter-nav { display: none; }
+  :where(main:not([data-motion="full"])) .experience-stage { overflow: visible; }
+  :where(main:not([data-motion="full"])) .chapter-grid { display: block; min-height: 0; }
+  :where(main:not([data-motion="full"])) .chapter { visibility: visible !important; opacity: 1 !important; transform: none !important; min-height: 0; padding: 75px 7vw 36px; overflow: hidden; border-bottom: 1px solid #ffffff18; pointer-events: auto; }
+  :where(main:not([data-motion="full"])) .chapter.hero { padding-top: 150px; }
+  :where(main:not([data-motion="full"])) .eyebrow { font-size: 8px; letter-spacing: .15em; gap: 11px; }
+  :where(main:not([data-motion="full"])) .red-line { width: 20px; }
+  :where(main:not([data-motion="full"])) h1 { font-size: clamp(68px, 13vw, 116px); margin-top: 32px; }
+  :where(main:not([data-motion="full"])) .hero-bottom { position: relative; inset: auto; display: block; margin-top: 28px; }
+  :where(main:not([data-motion="full"])) .hero-bottom p, :where(main:not([data-motion="full"])) .editorial > p { font-size: 12px; }
+  :where(main:not([data-motion="full"])) .text-link { margin-top: 25px; font-size: 8px; gap: 22px; }
+  :where(main:not([data-motion="full"])) .mobile-car { display: block; width: calc(100% + 14vw); max-width: none; margin: 32px -7vw -20px; height: auto; aspect-ratio: 5 / 3; object-fit: cover; }
+  :where(main:not([data-motion="full"])) .editorial h2, :where(main:not([data-motion="full"])) .performance h2 { font-size: clamp(46px, 8vw, 78px); margin: 27px 0; }
+  :where(main:not([data-motion="full"])) .chapter-note { margin-top: 28px; font-size: 8px; }
+  :where(main:not([data-motion="full"])) .stage-footer { position: relative; inset: auto; min-height: 70px; padding: 20px 7vw; border: 0; font-size: 6px; letter-spacing: .1em; }
+  :where(main:not([data-motion="full"])) .scroll-cue { display: none; }
+  :where(main:not([data-motion="full"])) .final-section { min-height: 790px; padding: 105px 7vw 0; flex-direction: column; align-items: stretch; justify-content: space-between; }
+  :where(main:not([data-motion="full"])) .final-section > img { object-position: 60% center; opacity: .28; }
+  :where(main:not([data-motion="full"])) .final-content h2 { font-size: clamp(65px, 11vw, 106px); }
+  :where(main:not([data-motion="full"])) .final-footer { position: relative; inset: auto; margin-top: 110px; flex-wrap: wrap; gap: 24px; padding: 28px 0; }
+  :where(main:not([data-motion="full"])) .final-footer > p { font-size: 8px; }
+  :where(main:not([data-motion="full"])) .credits { width: 100%; max-width: none; }
+  :where(main:not([data-motion="full"])) .cta { gap: 35px; font-size: 8px; }
 }
 @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
-  .chapter { display: grid; grid-template-columns: .85fr 1.15fr; align-content: center; column-gap: 5vw; min-height: 85svh; padding: 120px 7vw; }
-  .chapter > :not(.mobile-car) { grid-column: 1; }
-  .chapter .mobile-car { grid-column: 2; grid-row: 1 / span 5; align-self: center; width: 100%; margin: 0; }
-  .chapter.hero { padding-top: 150px; }
+  :where(main:not([data-motion="full"])) .chapter { display: grid; grid-template-columns: .85fr 1.15fr; align-content: center; column-gap: 5vw; min-height: 85svh; padding: 120px 7vw; }
+  :where(main:not([data-motion="full"])) .chapter > :not(.mobile-car) { grid-column: 1; }
+  :where(main:not([data-motion="full"])) .chapter .mobile-car { grid-column: 2; grid-row: 1 / span 5; align-self: center; width: 100%; margin: 0; }
+  :where(main:not([data-motion="full"])) .chapter.hero { padding-top: 150px; }
 }
 @media (max-width: 360px) {
   .wordmark { font-size: 12px; }
@@ -172,5 +176,5 @@ h1 em { font-size: 1.16em; }
   .stage-footer { font-size: 5.5px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+  :where(main:not([data-motion="full"])), :where(main:not([data-motion="full"])) *, :where(main:not([data-motion="full"])) *::before, :where(main:not([data-motion="full"])) *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
 }

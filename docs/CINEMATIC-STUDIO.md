@@ -31,7 +31,7 @@ Combined source font size is 236,292 bytes. Browser font requests stay local; bu
 
 ## Accessible alternatives
 
-Below 1024px the existing image edition stays in normal document flow without a GLB request. Normal-motion mobile adds only short text reveals. Reduced motion removes pinning, camera/lighting animation, text reveals, parallax and CSS transitions; desktop uses a static two-column composition. JavaScript-disabled rendering keeps all five sections and vehicle stills visible. Loading, model errors and genuine WebGL loss retain the studio poster. Responsive/motion-mode reentry resets readiness and can recover a fresh live scene.
+Below 1024px the existing image edition stays in normal document flow without a GLB request. Normal-motion mobile adds only short text reveals. The reduced-motion default removes pinning, camera/lighting animation, text reveals, parallax and CSS transitions; desktop uses a static two-column composition. Desktop visitors can explicitly opt into full motion using the header control and restore device settings afterward; the choice lasts for the session. See the [motion-preference fix](MOTION-PREFERENCE-FIX.md). JavaScript-disabled rendering keeps all five sections and vehicle stills visible. Loading, model errors and genuine WebGL loss retain the studio poster. Responsive/motion-mode reentry resets readiness and can recover a fresh live scene.
 
 ## Repeatable browser check
 

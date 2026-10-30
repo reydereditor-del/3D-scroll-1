@@ -1,12 +1,12 @@
 # Free NOCTURNE previews
 
-The GitHub Pages address is **https://reydereditor-del.github.io/3D-scroll-1/**. The source stays on `feat/nocturne-cinematic-studio`; `gh-pages` contains only generated static files. Publishing this preview does not merge the implementation into `main`.
+The GitHub Pages address is **https://reydereditor-del.github.io/3D-scroll-1/**. The current fix is on `fix/motion-preference-controls`; `gh-pages` contains only generated static files. Publishing this preview does not merge the implementation into `main`.
 
 The public site was checked in a real 1440px desktop browser, including visible forward/reverse 3D camera movement. See [actual screenshots and verification results](PAGES-VALIDATION.md).
 
 ## View the experience
 
-Open the URL in a desktop browser with a viewport at least 1024px wide. With reduced motion off and WebGL available, wait for **LIVE 3D EXPERIENCE**, then scroll in both directions or use the chapter controls. Mobile and reduced-motion settings intentionally show the accessible image edition without downloading the 3D model. No software installation, account, API key or subscription is needed to view the site.
+Open the URL in a desktop browser with a viewport at least 1024px wide. With normal motion and WebGL available, wait for **LIVE 3D EXPERIENCE**, then scroll in both directions or use the chapter controls. If the header says **Reduced motion is on**, the device has requested the accessible image edition. Choose **Enable 3D & motion** to opt into the full experience for this session, or keep the default. **Use device settings** restores the preference. Mobile retains its lightweight image edition. No software installation, account, API key or subscription is needed to view the site.
 
 ## Update the same preview
 

@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { StudioState } from './VehicleScene';
 import { assetPath } from '@/lib/assetPath';
+import { useMotionPreference } from '@/lib/useMotionPreference';
 
 const VehicleScene = dynamic(() => import('./VehicleScene'), { ssr: false });
 const chapters = ['Hero', 'Design', 'Performance', 'Details'];
@@ -35,11 +36,13 @@ class SceneBoundary extends Component<{ children: ReactNode; onError: () => void
 }
 
 export default function Experience() {
+  const { desktop, prefersReducedMotion, motionOverride, toggleMotion } = useMotionPreference();
   const root = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const [studio] = useState<StudioState>(() => ({ ...poses[0], opening: .16 }));
   const draw = useRef(() => {});
   const trigger = useRef<ScrollTrigger | null>(null);
+  const restoreOnLoad = useRef(true);
   const [active, setActive] = useState(0);
   const [live, setLive] = useState(false);
   const [status, setStatus] = useState<'loading' | 'ready' | 'fallback'>('loading');
@@ -60,7 +63,7 @@ export default function Experience() {
     const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
     try {
       const saved = JSON.parse(sessionStorage.getItem('nocturne-scroll') || 'null');
-      if (navigation?.type === 'reload' && saved?.width === window.innerWidth) restoreTop = saved.y;
+      if (restoreOnLoad.current && navigation?.type === 'reload' && saved?.width === window.innerWidth) restoreTop = saved.y;
     } catch { /* Native restoration remains available when storage is blocked. */ }
     const remember = () => {
       try { sessionStorage.setItem('nocturne-scroll', JSON.stringify({ y: window.scrollY, width: window.innerWidth })); } catch { /* Private mode. */ }
@@ -68,7 +71,9 @@ export default function Experience() {
     window.addEventListener('pagehide', remember);
     const media = gsap.matchMedia(root);
 
-    media.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+    // Device preferences remain the default; full motion requires a deliberate
+    // site-level opt-in when the device requests reduced motion.
+    media.add(`(min-width: 1024px)${motionOverride ? '' : ' and (prefers-reduced-motion: no-preference)'}`, () => {
       let disposed = false;
       let refreshFrame = 0;
       const canvas = document.createElement('canvas');
@@ -131,6 +136,7 @@ export default function Experience() {
             restoreTop = null;
             ScrollTrigger.update();
           }
+          restoreOnLoad.current = false;
         });
       });
       return () => {
@@ -152,7 +158,7 @@ export default function Experience() {
       }
     });
     return () => { window.removeEventListener('pagehide', remember); media.revert(); };
-  }, [studio]);
+  }, [studio, motionOverride]);
 
   const go = (index: number) => {
     const current = trigger.current;
@@ -160,12 +166,20 @@ export default function Experience() {
       window.scrollTo({ top: current.start + chapterTimes[index] / storyDuration * (current.end - current.start), behavior: 'auto' });
     } else document.getElementById(chapters[index].toLowerCase())?.scrollIntoView({ behavior: 'auto' });
   };
+  const changeMotion = () => {
+    // An explicit mode switch must not replay a prior reload's scroll offset.
+    restoreOnLoad.current = false;
+    toggleMotion();
+  };
 
-  return <main ref={root} id="top" data-chapter={chapters[active].toLowerCase()}>
+  return <main ref={root} id="top" data-chapter={chapters[active].toLowerCase()} data-motion={motionOverride ? 'full' : 'system'}>
     <a href="#hero" className="skip-link">Skip to the concept</a>
     <header className="site-header">
       <a href="#top" aria-label="Nocturne — back to top" className="wordmark">N<span className="mark-slash">/</span> NOCTURNE</a>
-      <div className="header-center">INDEPENDENT DESIGN STUDY <span>—</span> 001</div>
+      {desktop && (prefersReducedMotion || motionOverride) ? <div className="motion-controls">
+        <span id="motion-reason">{motionOverride ? 'Motion enabled' : 'Reduced motion is on'}</span>
+        <button type="button" onClick={changeMotion} aria-describedby="motion-reason">{motionOverride ? 'Use device settings' : 'Enable 3D & motion'}</button>
+      </div> : <div className="header-center">INDEPENDENT DESIGN STUDY <span>—</span> 001</div>}
       <a href="#final" className="header-link">THE CONCEPT <span><Arrow /></span></a>
     </header>
     <div ref={stage} className={`experience-stage ${live ? 'is-live' : ''}`}>
@@ -211,7 +225,7 @@ export default function Experience() {
       </nav>
       <div className="stage-footer">
         <span>FICTIONAL CONCEPT / PORTFOLIO DEMO</span>
-        <span className="scene-status" role="status">{live ? (status === 'ready' ? 'LIVE 3D EXPERIENCE' : status === 'fallback' ? 'STUDIO VIEW / 3D UNAVAILABLE' : 'LOADING 3D / STUDIO VIEW') : 'STUDIO EDITION'}</span>
+        <span className="scene-status" role="status">{desktop && (!prefersReducedMotion || motionOverride) && status === 'fallback' ? 'STUDIO VIEW / 3D UNAVAILABLE' : live ? (status === 'ready' ? 'LIVE 3D EXPERIENCE' : 'LOADING 3D / STUDIO VIEW') : 'STUDIO EDITION'}</span>
         <span className="scroll-cue">SCROLL TO DISCOVER <span><Arrow down /></span></span>
       </div>
     </div>
