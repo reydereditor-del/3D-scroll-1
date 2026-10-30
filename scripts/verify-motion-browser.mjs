@@ -145,8 +145,8 @@ try {
   await noGL.getByRole('button', { name: 'Use device settings', exact: true }).click(); await still(noGL); await noGL.close();
   checks.push('Unavailable WebGL keeps the poster and reports 3D unavailable; reset remains usable.');
 
-  assert.equal(errors.length, 0, errors.join('\n'));
+  fs.writeFileSync(`${out}/results.json`, JSON.stringify({ base, testedAt: new Date().toISOString(), viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce', softwareWebGL: true, checks, frames, reverseDelta, errors, failedResponses, passed: errors.length === 0 && failedResponses.length === 0 }, null, 2));
   assert.equal(failedResponses.length, 0, JSON.stringify(failedResponses));
-  fs.writeFileSync(`${out}/results.json`, JSON.stringify({ base, testedAt: new Date().toISOString(), viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce', softwareWebGL: true, checks, frames, reverseDelta, errors, failedResponses }, null, 2));
+  assert.equal(errors.length, 0, errors.join('\n'));
   console.log(JSON.stringify({ base, checks, reverseDelta, errors, failedResponses, out }));
 } finally { await browser.close(); }

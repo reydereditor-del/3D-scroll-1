@@ -1,0 +1,67 @@
+{
+  "base": "https://reydereditor-del.github.io/3D-scroll-1/?v=3157479",
+  "testedAt": "2026-10-30T17:09:01.723Z",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "reducedMotion": "reduce",
+  "softwareWebGL": true,
+  "checks": [
+    "Reduced-motion default: readable still edition, clear opt-in, no model request or pin.",
+    "Keyboard opt-in starts visible WebGL and actual text transforms while the OS still reports reduced motion.",
+    "Opted-in forward/reverse camera and native wheel input work; matching reverse position has delta 0.",
+    "Explicit choice and scroll survive mid-story reload; later mode switches do not replay its stale scroll position.",
+    "Resize to mobile preserves the image edition, then desktop restores the explicit opt-in with one canvas/pin.",
+    "Use device settings removes 3D/pinning and stays reduced after reload.",
+    "Live OS preference changes enter and exit full motion without a stored opt-in.",
+    "Explicit enable/reset works even when browser storage is blocked.",
+    "Unavailable WebGL keeps the poster and reports 3D unavailable; reset remains usable."
+  ],
+  "frames": {
+    "hero": {
+      "camera": [
+        6.287930240184686,
+        2.45,
+        7.775727187509279
+      ],
+      "environment": 0.75
+    },
+    "forward": {
+      "camera": [
+        11.762219734293353,
+        1.914959,
+        -2.526311734029667
+      ],
+      "environment": 0.75
+    },
+    "rear": {
+      "camera": [
+        -7.067664789607398,
+        2.05,
+        -7.765186051972214
+      ],
+      "environment": 0.75
+    },
+    "reverse": {
+      "camera": [
+        11.762219734293353,
+        1.914959,
+        -2.526311734029667
+      ],
+      "environment": 0.75
+    },
+    "return": {
+      "camera": [
+        6.287930240184686,
+        2.45,
+        7.775727187509279
+      ],
+      "environment": 0.75
+    }
+  },
+  "reverseDelta": 0,
+  "errors": [],
+  "failedResponses": [],
+  "passed": true
+}

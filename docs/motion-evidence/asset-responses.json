@@ -1,0 +1,142 @@
+[
+  {
+    "asset": "_next/static/P10Z70-Z8YCFnyGRjE35B/_buildManifest.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/P10Z70-Z8YCFnyGRjE35B/_ssgManifest.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/4bd1b696-c7408084347438ae.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/60.474b3801b6b6a1a9.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/615-5a322c7e321a396a.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/757.c2db60b71bd94ea3.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/794-08e2f31ab3e32eac.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/app/_global-error/page-aba28f88d5781771.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/app/_not-found/page-101bc82119251b50.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/app/layout-50b7a8cf32acab09.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/app/page-23b465fb7a6e8404.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/b536a0f1.336efb6d32c28506.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/bd904a5c.2371a149e650f003.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/c15bf2b0-182b384b62e205ff.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/e49654ac.eeb47ea8f544e98c.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/framework-ea4f97ca039bd777.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/main-app-fd0b24c807619fa9.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/main-e3bbabdcba17f0b2.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/next/dist/client/components/builtin/app-error-aba28f88d5781771.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/next/dist/client/components/builtin/forbidden-aba28f88d5781771.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/next/dist/client/components/builtin/global-error-b6bbac63fa082e4a.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/next/dist/client/components/builtin/not-found-aba28f88d5781771.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/next/dist/client/components/builtin/unauthorized-aba28f88d5781771.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/polyfills-42372ed130431b0a.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/chunks/webpack-39a8f12bce43d169.js",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/css/6d7ccd4967a3fe55.css",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/media/57ffad6f4cd1a3d5-s.p.ttf",
+    "status": 200
+  },
+  {
+    "asset": "_next/static/media/5d7fa19dd58d4d1a-s.p.ttf",
+    "status": 200
+  },
+  {
+    "asset": "models/concept.glb",
+    "status": 200
+  },
+  {
+    "asset": "images/hero.webp",
+    "status": 200
+  },
+  {
+    "asset": "images/design.webp",
+    "status": 200
+  },
+  {
+    "asset": "images/performance.webp",
+    "status": 200
+  },
+  {
+    "asset": "images/details.webp",
+    "status": 200
+  },
+  {
+    "asset": "icon.svg",
+    "status": 200
+  },
+  {
+    "asset": "licenses/carconcept-CC-BY-4.0.txt",
+    "status": 200
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "viewport": {
+      "width": 1024,
+      "height": 768
+    },
+    "deviceScaleFactor": 1,
+    "button": {
+      "x": 516.890625,
+      "y": 20.5,
+      "width": 129.421875,
+      "height": 44
+    },
+    "modelRequests": 0
+  },
+  {
+    "viewport": {
+      "width": 1445,
+      "height": 684
+    },
+    "deviceScaleFactor": 1.25,
+    "button": {
+      "x": 727.390625,
+      "y": 20.5,
+      "width": 129.421875,
+      "height": 44
+    },
+    "modelRequests": 0
+  }
+]
