@@ -1,0 +1,92 @@
+{
+  "url": "https://reydereditor-del.github.io/3D-scroll-1/",
+  "testedAt": "2026-10-30T16:34:06.192Z",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "softwareWebGL": true,
+  "requests": [
+    200
+  ],
+  "errors": [],
+  "failedResponses": [],
+  "samples": {
+    "hero": {
+      "camera": [
+        6.287930240184686,
+        2.45,
+        7.775727187509279
+      ],
+      "environment": 0.74999925,
+      "triangles": 213261
+    },
+    "forward-design": {
+      "camera": [
+        11.762219734293353,
+        1.914959,
+        -2.526311734029667
+      ],
+      "environment": 0.75,
+      "triangles": 213261
+    },
+    "performance": {
+      "camera": [
+        -7.067664789607398,
+        2.05,
+        -7.765186051972214
+      ],
+      "environment": 0.75,
+      "triangles": 213261
+    },
+    "details": {
+      "camera": [
+        3.7364149242162283,
+        1.35,
+        4.947646260000227
+      ],
+      "environment": 0.75,
+      "triangles": 213261
+    },
+    "reverse-design": {
+      "camera": [
+        11.762219734293353,
+        1.914959,
+        -2.526311734029667
+      ],
+      "environment": 0.75,
+      "triangles": 213261
+    },
+    "reverse-hero": {
+      "camera": [
+        6.287930240184686,
+        2.45,
+        7.775727187509279
+      ],
+      "environment": 0.75,
+      "triangles": 213261
+    }
+  },
+  "reverseDelta": 0,
+  "nativeWheel": true,
+  "fallbacks": [
+    {
+      "name": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "reducedMotion": "no-preference",
+      "models": 0
+    },
+    {
+      "name": "reduced",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "reducedMotion": "reduce",
+      "models": 0
+    }
+  ]
+}

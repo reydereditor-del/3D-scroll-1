@@ -2,6 +2,8 @@
 
 The GitHub Pages address is **https://reydereditor-del.github.io/3D-scroll-1/**. The source stays on `feat/nocturne-cinematic-studio`; `gh-pages` contains only generated static files. Publishing this preview does not merge the implementation into `main`.
 
+The public site was checked in a real 1440px desktop browser, including visible forward/reverse 3D camera movement. See [actual screenshots and verification results](PAGES-VALIDATION.md).
+
 ## View the experience
 
 Open the URL in a desktop browser with a viewport at least 1024px wide. With reduced motion off and WebGL available, wait for **LIVE 3D EXPERIENCE**, then scroll in both directions or use the chapter controls. Mobile and reduced-motion settings intentionally show the accessible image edition without downloading the 3D model. No software installation, account, API key or subscription is needed to view the site.
