@@ -1,0 +1,31 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[813],{7813:(e,t,r)=>{r.r(t),r.d(t,{default:()=>x});var n=r(5155),i=r(5860),o=r(6275),a=r(2115),s=r(9654),l=r(7651),c=r(5269),u=r(7792);let d={uniforms:{color:{value:new c.Q1f("#0c0d0f")},tDiffuse:{value:null},textureMatrix:{value:null}},vertexShader:`
+    uniform mat4 textureMatrix;
+    varying vec4 vReflection;
+    varying vec2 vFloor;
+    #include <common>
+    #include <logdepthbuf_pars_vertex>
+    void main() {
+      vReflection = textureMatrix * vec4(position, 1.0);
+      vFloor = position.xy;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      #include <logdepthbuf_vertex>
+    }`,fragmentShader:`
+    uniform sampler2D tDiffuse;
+    varying vec4 vReflection;
+    varying vec2 vFloor;
+    #include <logdepthbuf_pars_fragment>
+    void main() {
+      #include <logdepthbuf_fragment>
+      vec2 uv = vReflection.xy / vReflection.w;
+      vec2 spread = vec2(0.0018, 0.0035);
+      vec3 reflected = texture2D(tDiffuse, uv).rgb * 0.4;
+      reflected += texture2D(tDiffuse, uv + spread).rgb * 0.15;
+      reflected += texture2D(tDiffuse, uv - spread).rgb * 0.15;
+      reflected += texture2D(tDiffuse, uv + vec2(spread.x, -spread.y)).rgb * 0.15;
+      reflected += texture2D(tDiffuse, uv + vec2(-spread.x, spread.y)).rgb * 0.15;
+      float fade = 1.0 - smoothstep(1.0, 5.0, length(vFloor * vec2(1.0, 0.65)));
+      vec3 matte = vec3(0.0037, 0.0040, 0.0048);
+      gl_FragColor = vec4(matte + reflected * 0.14 * fade, 1.0);
+      #include <tonemapping_fragment>
+      #include <colorspace_fragment>
+    }`};function f(){let{scene:e,size:t,invalidate:r}=(0,i.D)();return(0,a.useEffect)(()=>{let n=new c.bdM(24,24),i=Math.min(768,Math.max(256,Math.round(t.width/2))),o=Math.min(512,Math.max(256,Math.round(t.height/2))),a=new u.J(n,{textureWidth:i,textureHeight:o,clipBias:.003,multisample:0,shader:d});return a.rotation.x=-Math.PI/2,a.position.y=-.012,e.add(a),r(),()=>{e.remove(a),a.dispose(),n.dispose()}},[e,t.width,t.height,r]),null}var m=r(9625);let v={position:[0,2.45,10],fov:32,near:.1,far:250},h={antialias:!0,alpha:!0,powerPreference:"high-performance"};function p({onReady:e,onError:t}){let[r,o]=(0,a.useState)(null),{invalidate:u}=(0,i.D)();return(0,a.useEffect)(()=>{let e=!1,r=null,n=e=>{let t=new Set,r=new Set;e.traverse(e=>{if(e instanceof c.eaF)for(let n of(t.add(e.geometry),Array.isArray(e.material)?e.material:[e.material]))r.add(n)}),t.forEach(e=>e.dispose()),r.forEach(e=>e.dispose())};return new s.B().load((0,l.Q)("/models/concept.glb"),t=>{if(e)return void n(t.scene);(r=t.scene).updateMatrixWorld(!0),r.position.y-=new c.NRn().setFromObject(r,!0).min.y;let i=new Map;r.traverse(e=>{if(!(e instanceof c.eaF))return;let t=e=>e instanceof c._4j?"Original graphite finish"===e.name?(i.has(e)||i.set(e,new c.uSd({name:e.name,color:new c.Q1f(.038,.044,.055),metalness:.72,roughness:.28,clearcoat:.8,clearcoatRoughness:.2,side:e.side})),i.get(e)):("Unmarked alloy"===e.name&&(e.color.setRGB(.19,.205,.23),e.metalness=.85,e.roughness=.29),"Opaque smoked glazing"===e.name&&(e.color.setRGB(.009,.012,.016),e.metalness=.25,e.roughness=.16),"White light lens"===e.name&&(e.emissive.set("#d5e8ff"),e.emissiveIntensity=1.1),"Red light lens"===e.name&&(e.emissive.set("#ee2114"),e.emissiveIntensity=.9),e):e;e.material=Array.isArray(e.material)?e.material.map(t):t(e.material)}),i.forEach((e,t)=>t.dispose()),o(r),u()},void 0,()=>{e||t()}),()=>{e=!0,r&&n(r)}},[u,t]),(0,a.useEffect)(()=>{r&&(u(),e())},[r,u,e]),r?(0,n.jsx)("primitive",{object:r}):null}function g({state:e,register:t,onError:r}){let{camera:o,invalidate:s,gl:l,scene:u,size:d}=(0,i.D)(),v=(0,a.useRef)(null),h=(0,a.useRef)(null),p=(0,a.useRef)(null);return(0,a.useEffect)(()=>{let e=l.domElement;return e.addEventListener("webglcontextlost",r),()=>e.removeEventListener("webglcontextlost",r)},[l,r]),(0,a.useEffect)(()=>{let e=new m.PMREMGenerator(l),t=new c.Z58;t.background=new c.Q1f(.007,.009,.013);let r=[],n=(e,n,i,o,a,s)=>{let l=new c.eaF(new c.bdM(o,a),new c.V9B({color:s}));l.position.set(e,n,i),l.lookAt(0,.5,0),t.add(l),r.push(l)};n(0,5.5,0,1.8,8,new c.Q1f(6,6.5,7)),n(-5,2.4,0,1.2,7,new c.Q1f(4,4.5,5)),n(5,3,-2,1.5,6,new c.Q1f(3.5,3.4,3.2)),n(1,1.8,-6,5,.45,new c.Q1f(2,.1,.055));let i=e.fromScene(t,.08);return u.environment=i.texture,s(),()=>{u.environment=null,i.dispose(),r.forEach(e=>{e.geometry.dispose(),e.material.dispose()}),e.dispose()}},[l,u,s]),(0,a.useEffect)(()=>{let r=new c.Pq0,n=()=>{o.position.set(Math.sin(e.angle)*e.radius,e.height,Math.cos(e.angle)*e.radius),o.lookAt(r.set(e.tx,e.ty,e.tz)),o instanceof c.ubm&&(o.fov=e.lens,o.setViewOffset(d.width,d.height,e.offset*d.width,0,d.width,d.height)),u.environmentIntensity=.65*e.opening,v.current&&(v.current.position.set(-3+(e.sweep+(1-e.opening)*1.1)*5,4.7,3.5),v.current.lookAt(0,.5,0),v.current.intensity=e.key*e.opening*1.6),h.current&&(h.current.position.set(3,2.4,-4),h.current.lookAt(0,.5,0),h.current.intensity=e.rim*e.opening*1.2),p.current&&(p.current.intensity=.28*e.opening),s()};return t(n),n(),()=>t(()=>{})},[o,s,t,e,d,u]),(0,n.jsxs)(n.Fragment,{children:[(0,n.jsx)("directionalLight",{ref:v,color:"#e4ebf4"}),(0,n.jsx)("directionalLight",{ref:h,color:"#ed493c"}),(0,n.jsx)("directionalLight",{ref:p,position:[-4,3,4],color:"#d9e1ed"}),(0,n.jsx)(f,{}),(0,n.jsxs)("mesh",{rotation:[-Math.PI/2,0,0],position:[0,-.028,0],children:[(0,n.jsx)("planeGeometry",{args:[200,200]}),(0,n.jsx)("meshBasicMaterial",{color:"#0c0d0f",toneMapped:!1})]}),(0,n.jsxs)("mesh",{rotation:[-Math.PI/2,0,0],position:[0,-.008,0],scale:[1.25,2.5,1],children:[(0,n.jsx)("circleGeometry",{args:[1,64]}),(0,n.jsx)("shaderMaterial",{transparent:!0,depthWrite:!1,uniforms:{},vertexShader:"varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}",fragmentShader:"varying vec2 vUv; void main(){float d=length((vUv-.5)*2.);gl_FragColor=vec4(0.,0.,0.,.6*(1.-smoothstep(.2,1.,d)));}"})]})]})}function x(e){let{state:t}=e;return(0,n.jsxs)(o.Hl,{"aria-hidden":"true",frameloop:"demand",dpr:[1,1.5],camera:v,gl:h,fallback:null,children:[(0,n.jsx)(g,{state:t,register:e.register,onError:e.onError}),(0,n.jsx)(a.Suspense,{fallback:null,children:(0,n.jsx)(p,{onReady:e.onReady,onError:e.onError})})]})}}}]);
