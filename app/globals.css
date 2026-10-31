@@ -115,6 +115,20 @@ h1 em { font-size: 1.16em; }
 .credits p { padding-top: 10px; }
 .credits a { text-decoration: underline; text-underline-offset: 3px; }
 
+/* The approved studio composition reserves the left third for type and the
+   right two-thirds for the actual 3D vehicle. Smaller type lets the car lead. */
+@media (min-width: 1024px) {
+  .hero h1 { font-size: clamp(74px, 7vw, 112px); margin-top: 28px; }
+  .hero { padding-top: 19vh; }
+  .hero-bottom { align-items: start; flex-direction: column; gap: 24px; right: auto; bottom: 15vh; }
+  .hero-bottom p { max-width: 255px; }
+  .editorial h2 { font-size: clamp(50px, 4.7vw, 76px); }
+  .editorial > p { max-width: 310px; }
+  .chapter-note { margin-top: 32px; }
+  .performance h2 { font-size: clamp(46px, 4.3vw, 70px); }
+  .chapter-nav { right: 2.5vw; }
+}
+
 @media (max-width: 1200px) and (min-width: 1024px) {
   .header-center { font-size: 8px; margin-left: 0; }
   .chapter-nav { right: 2vw; }

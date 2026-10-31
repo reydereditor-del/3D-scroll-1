@@ -8,20 +8,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { StudioState } from './VehicleScene';
 import { assetPath } from '@/lib/assetPath';
 import { useMotionPreference } from '@/lib/useMotionPreference';
+import { studioPoses as poses, chapterTimes, storyDuration, moves } from '@/lib/studioDirection';
 
 const VehicleScene = dynamic(() => import('./VehicleScene'), { ssr: false });
 const chapters = ['Hero', 'Design', 'Performance', 'Details'];
 const stills = ['hero', 'design', 'performance', 'details', 'hero'];
-// Navigation lands in the composed hold, after the camera/text transition.
-const chapterTimes = [0, 1.5, 2.9, 4.45];
-const storyDuration = 5.4;
-const poses: Omit<StudioState, 'opening'>[] = [
-  { angle: .68, radius: 10, height: 2.45, tx: 0, ty: .6, tz: 0, offset: -.19, key: .8, rim: .7, sweep: -.3 },
-  { angle: 1.55, radius: 12.2, height: 1.9, tx: 0, ty: .6, tz: 0, offset: -.14, key: 1, rim: .5, sweep: .7 },
-  { angle: 3.88, radius: 10.5, height: 2.05, tx: 0, ty: .6, tz: 0, offset: .19, key: .75, rim: 1, sweep: .2 },
-  { angle: 6.93, radius: 6.2, height: 1.35, tx: .35, ty: .6, tz: 1, offset: -.23, key: 1.15, rim: .35, sweep: .8 },
-  { angle: 6.96, radius: 9.4, height: 2.45, tx: 0, ty: .6, tz: 0, offset: -.05, key: .8, rim: .7, sweep: -.3 },
-];
 
 function Arrow({ down = false }: { down?: boolean }) {
   return <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ transform: down ? 'rotate(135deg)' : undefined }}><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" strokeWidth="1.15" /></svg>;
@@ -94,37 +85,35 @@ export default function Experience() {
 
       const timeline = gsap.timeline({
         scrollTrigger: {
-          trigger: stage.current, start: 'top top', end: () => '+=' + window.innerHeight * 5.5,
+          trigger: stage.current, start: 'top top', end: () => '+=' + window.innerHeight * 7,
           pin: true, scrub: .35, invalidateOnRefresh: true,
         },
         onUpdate: () => {
           const time = timeline.time();
           // The rail follows the visible scene, including the softened scrub.
           root.current?.style.setProperty('--story-progress', String(timeline.progress()));
-          setActive(time >= 3.85 ? 3 : time >= 2.35 ? 2 : time >= .98 ? 1 : 0);
+          setActive(time >= moves[2].text ? 3 : time >= moves[1].text ? 2 : time >= moves[0].text ? 1 : 0);
         },
       });
       trigger.current = timeline.scrollTrigger!;
       chapterTimes.forEach((time, index) => timeline.addLabel(chapters[index].toLowerCase(), time));
-      const starts = [.45, 1.8, 3.25];
-      const durations = [.75, .8, .85];
       // The poster timeline runs independently of WebGL. Keep all frames mounted
       // so the browser can load upcoming views before their transition.
-      timeline.to(posters[0], { scale: 1.09, xPercent: 1, duration: 1.2, ease: 'sine.inOut' }, 0);
-      starts.forEach((start, index) => {
+      timeline.to(posters[0], { scale: 1.09, xPercent: 1, duration: 1.6, ease: 'sine.inOut' }, 0);
+      moves.forEach(({ start, duration, text }, index) => {
         const incoming = posters[index + 1];
         timeline.to(incoming, { opacity: 1, duration: .5, ease: 'sine.inOut' }, start + .1);
-        timeline.to(incoming, { scale: 1.01, xPercent: index === 1 ? -1 : 1, duration: 1.45, ease: 'sine.inOut' }, start);
+        timeline.to(incoming, { scale: 1.01, xPercent: index === 1 ? -1 : 1, duration: 1.9, ease: 'sine.inOut' }, start);
         timeline.to(posters[index], { opacity: 0, duration: .3 }, start + .5);
         timeline.to('.stage-vignette', { '--shade-right': index === 1 ? 1 : 0, duration: .5, ease: 'sine.inOut' }, start);
-        timeline.to(studio, { ...poses[index + 1], duration: durations[index], ease: 'sine.inOut', onUpdate: () => draw.current() }, start);
+        timeline.to(studio, { ...poses[index + 1], duration, ease: 'sine.inOut', onUpdate: () => draw.current() }, start);
         timeline.to(panels[index], { autoAlpha: 0, y: -20, duration: .22, ease: 'power2.in' }, start + .3);
-        timeline.fromTo(panels[index + 1], { autoAlpha: 0, y: 0 }, { autoAlpha: 1, duration: .3 }, start + durations[index] - .22);
-        timeline.fromTo(panels[index + 1].querySelectorAll('.reveal-line > span'), { yPercent: 110 }, { yPercent: 0, duration: .4, stagger: .07, ease: 'power3.out' }, start + durations[index] - .22);
-        timeline.fromTo(panels[index + 1].querySelectorAll('.chapter-note'), { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: .25 }, start + durations[index] + .05);
+        timeline.fromTo(panels[index + 1], { autoAlpha: 0, y: 0 }, { autoAlpha: 1, duration: .3 }, text);
+        timeline.fromTo(panels[index + 1].querySelectorAll('.reveal-line > span'), { yPercent: 110 }, { yPercent: 0, duration: .4, stagger: .07, ease: 'power3.out' }, text);
+        timeline.fromTo(panels[index + 1].querySelectorAll('.chapter-note'), { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: .25 }, text + .3);
       });
-      timeline.to(studio, { ...poses[4], duration: .8, ease: 'sine.inOut', onUpdate: () => draw.current() }, storyDuration - .8);
-      timeline.to(posters[4], { opacity: 1, scale: 1, duration: .8, ease: 'sine.inOut' }, storyDuration - .8);
+      timeline.to(studio, { ...poses[4], duration: 1.1, ease: 'sine.inOut', onUpdate: () => draw.current() }, storyDuration - 1.1);
+      timeline.to(posters[4], { opacity: 1, scale: 1, duration: 1.1, ease: 'sine.inOut' }, storyDuration - 1.1);
       timeline.to(panels[3], { autoAlpha: 0, y: -12, duration: .3 }, storyDuration - .3);
 
       // A short entrance, independent of model download time. No blocking loader.
