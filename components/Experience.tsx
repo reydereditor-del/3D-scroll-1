@@ -8,11 +8,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { StudioState } from './VehicleScene';
 import { assetPath } from '@/lib/assetPath';
 import { useMotionPreference } from '@/lib/useMotionPreference';
-import { studioPoses as poses, chapterTimes, storyDuration, moves } from '@/lib/studioDirection';
+import { sampleStudioPose, chapterTimes, storyDuration, moves } from '@/lib/studioDirection';
+import { availableCars } from '@/lib/carCatalog';
+import CarSelector from './CarSelector';
 
 const VehicleScene = dynamic(() => import('./VehicleScene'), { ssr: false });
 const chapters = ['Hero', 'Design', 'Performance', 'Details'];
-const stills = ['hero', 'design', 'performance', 'details', 'hero'];
 
 function Arrow({ down = false }: { down?: boolean }) {
   return <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ transform: down ? 'rotate(135deg)' : undefined }}><path d="M3 13 13 3M3 3h10v10" stroke="currentColor" strokeWidth="1.15" /></svg>;
@@ -31,7 +32,15 @@ export default function Experience() {
   const { desktop, prefersReducedMotion, motionOverride, toggleMotion } = useMotionPreference();
   const root = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
-  const [studio] = useState<StudioState>(() => ({ ...poses[0], opening: .16 }));
+  const [activeCar, setActiveCar] = useState(availableCars[0]);
+  const [requestedId, setRequestedId] = useState(availableCars[0].id);
+  const [selectionError, setSelectionError] = useState('');
+  const activeCarRef = useRef(availableCars[0]);
+  const poseRef = useRef(availableCars[0].poses);
+  const playhead = useRef({ time: 0 });
+  const hasCar = useRef(false);
+  const hasRevealed = useRef(false);
+  const [studio] = useState<StudioState>(() => ({ ...availableCars[0].poses[0], opening: .16 }));
   const draw = useRef(() => {});
   const trigger = useRef<ScrollTrigger | null>(null);
   const restoreOnLoad = useRef(true);
@@ -40,14 +49,39 @@ export default function Experience() {
   const [status, setStatus] = useState<'loading' | 'ready' | 'fallback'>('loading');
   const [assetFailed, setAssetFailed] = useState(false);
   const register = useCallback((update: () => void) => { draw.current = update; }, []);
-  const onReady = useCallback(() => { setStatus('ready'); }, []);
+  const redraw = useCallback(() => draw.current(), []);
+  const onReady = useCallback((id: string) => {
+    const car = availableCars.find(item => item.id === id);
+    if (!car) return;
+    poseRef.current = car.poses;
+    activeCarRef.current = car;
+    Object.assign(studio, sampleStudioPose(playhead.current.time, car.poses));
+    hasCar.current = true;
+    setActiveCar(car);
+    setSelectionError('');
+    setStatus('ready');
+    draw.current();
+  }, [studio]);
   const onError = useCallback(() => { setStatus('fallback'); setAssetFailed(true); }, []);
+  const onLoadError = useCallback(() => {
+    setRequestedId(activeCarRef.current.id);
+    setSelectionError('Could not load that car. Please try again.');
+    if (!hasCar.current) onError();
+  }, [onError]);
+  const requestedCar = availableCars.find(car => car.id === requestedId) ?? activeCar;
+  const selectCar = (id: string) => {
+    if (!availableCars.some(car => car.id === id) || id === activeCar.id) return;
+    setSelectionError('');
+    setRequestedId(id);
+  };
 
   useEffect(() => {
     if (!live || status !== 'ready') return;
-    const reveal = gsap.to(studio, { opening: 1, duration: 1.65, ease: 'power2.out', onUpdate: () => draw.current() });
+    const duration = hasRevealed.current ? .65 : 1.65;
+    hasRevealed.current = true;
+    const reveal = gsap.to(studio, { opening: 1, duration, ease: 'power2.out', onUpdate: () => draw.current() });
     return () => { reveal.kill(); };
-  }, [live, status, studio]);
+  }, [activeCar.id, live, status, studio]);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -73,9 +107,10 @@ export default function Experience() {
       const supported = !!gl;
       gl?.getExtension('WEBGL_lose_context')?.loseContext();
       setAssetFailed(false);
+      hasCar.current = false;
       setStatus(supported ? 'loading' : 'fallback');
       setLive(supported);
-      gsap.set(studio, { ...poses[0], opening: .16 });
+      gsap.set(studio, { ...poseRef.current[0], opening: .16 });
       const panels = gsap.utils.toArray<HTMLElement>('.chapter', root.current);
       const posters = gsap.utils.toArray<HTMLElement>('.scene-poster', root.current);
       gsap.set(posters, { opacity: 0, scale: 1.08, xPercent: 0, yPercent: 0 });
@@ -90,29 +125,31 @@ export default function Experience() {
         },
         onUpdate: () => {
           const time = timeline.time();
+          playhead.current.time = time;
+          Object.assign(studio, sampleStudioPose(time, poseRef.current));
+          draw.current();
           // The rail follows the visible scene, including the softened scrub.
           root.current?.style.setProperty('--story-progress', String(timeline.progress()));
           setActive(time >= moves[2].text ? 3 : time >= moves[1].text ? 2 : time >= moves[0].text ? 1 : 0);
         },
       });
       trigger.current = timeline.scrollTrigger!;
+      timeline.to(playhead.current, { time: storyDuration, duration: storyDuration, ease: 'none' }, 0);
       chapterTimes.forEach((time, index) => timeline.addLabel(chapters[index].toLowerCase(), time));
       // The poster timeline runs independently of WebGL. Keep all frames mounted
       // so the browser can load upcoming views before their transition.
       timeline.to(posters[0], { scale: 1.09, xPercent: 1, duration: 1.6, ease: 'sine.inOut' }, 0);
-      moves.forEach(({ start, duration, text }, index) => {
+      moves.forEach(({ start, text }, index) => {
         const incoming = posters[index + 1];
         timeline.to(incoming, { opacity: 1, duration: .5, ease: 'sine.inOut' }, start + .1);
         timeline.to(incoming, { scale: 1.01, xPercent: index === 1 ? -1 : 1, duration: 1.9, ease: 'sine.inOut' }, start);
         timeline.to(posters[index], { opacity: 0, duration: .3 }, start + .5);
         timeline.to('.stage-vignette', { '--shade-right': index === 1 ? 1 : 0, duration: .5, ease: 'sine.inOut' }, start);
-        timeline.to(studio, { ...poses[index + 1], duration, ease: 'sine.inOut', onUpdate: () => draw.current() }, start);
         timeline.to(panels[index], { autoAlpha: 0, y: -20, duration: .22, ease: 'power2.in' }, start + .3);
         timeline.fromTo(panels[index + 1], { autoAlpha: 0, y: 0 }, { autoAlpha: 1, duration: .3 }, text);
         timeline.fromTo(panels[index + 1].querySelectorAll('.reveal-line > span'), { yPercent: 110 }, { yPercent: 0, duration: .4, stagger: .07, ease: 'power3.out' }, text);
         timeline.fromTo(panels[index + 1].querySelectorAll('.chapter-note'), { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: .25 }, text + .3);
       });
-      timeline.to(studio, { ...poses[4], duration: 1.1, ease: 'sine.inOut', onUpdate: () => draw.current() }, storyDuration - 1.1);
       timeline.to(posters[4], { opacity: 1, scale: 1, duration: 1.1, ease: 'sine.inOut' }, storyDuration - 1.1);
       timeline.to(panels[3], { autoAlpha: 0, y: -12, duration: .3 }, storyDuration - .3);
 
@@ -190,11 +227,11 @@ export default function Experience() {
       <a href="#final" className="header-link">THE CONCEPT <span><Arrow /></span></a>
     </header>
     <div ref={stage} className={`experience-stage ${live ? 'is-live' : ''}`}>
-      <div role="img" aria-label={`Unbranded graphite concept car — ${chapters[active]} studio view`} className={`scene-layer ${status === 'ready' ? 'scene-ready' : ''}`}>
+      <div role="img" aria-label={`${activeCar.name} — ${chapters[active]} studio view`} className={`scene-layer ${status === 'ready' ? 'scene-ready' : ''}`}>
         <div className="poster-sequence" aria-hidden="true">
-          {stills.map((name, index) => <img key={`${name}-${index}`} className="scene-poster" src={assetPath(`/images/${name}.webp`)} alt="" fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async" />)}
+          {activeCar.photos.map((photo, index) => <img key={index} className="scene-poster" src={assetPath(photo)} alt="" fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async" />)}
         </div>
-        {live && !assetFailed && <SceneBoundary onError={onError}><VehicleScene state={studio} register={register} onReady={onReady} onError={onError} /></SceneBoundary>}
+        {live && !assetFailed && <SceneBoundary onError={onError}><VehicleScene car={requestedCar} state={studio} register={register} redraw={redraw} onReady={onReady} onLoadError={onLoadError} onError={onError} /></SceneBoundary>}
       </div>
       <div className="stage-vignette" />
       <div className="chapter-grid">
@@ -202,28 +239,28 @@ export default function Experience() {
           <div className="eyebrow"><span className="red-line" /> AUTOMOTIVE EXPLORATION — VOL. 01</div>
           <h1 id="hero-title"><Line>A study</Line><Line>in <em>motion.</em></Line></h1>
           <div className="hero-bottom"><p>Not built to blend in.<br />An exploration of form, light, and presence.</p><button onClick={() => go(1)} className="text-link">EXPLORE THE CONCEPT <span><Arrow down /></span></button></div>
-          <img className="mobile-car" src={assetPath('/images/hero.webp')} alt="Unbranded graphite concept car, front three-quarter studio view" fetchPriority="high" />
+          <img className="mobile-car" src={assetPath(activeCar.photos[0])} alt={`${activeCar.name}, front three-quarter studio view`} fetchPriority="high" />
         </section>
         <section id="design" className="chapter editorial design" aria-labelledby="design-title">
           <div className="eyebrow"><span className="red-line" /> 01 / DESIGN</div>
           <h2 id="design-title"><Line>Less noise.</Line><Line><em>More presence.</em></Line></h2>
           <p>A continuous silhouette. A deliberate line.<br />Nothing added without a reason.</p>
           <div className="chapter-note"><span>FORM LANGUAGE</span><span>SCULPTED / UNBROKEN</span></div>
-          <img className="mobile-car" src={assetPath('/images/design.webp')} alt="Side profile of the unbranded concept car" loading="lazy" />
+          <img className="mobile-car" src={assetPath(activeCar.photos[1])} alt={`${activeCar.name}, side profile`} loading="lazy" />
         </section>
         <section id="performance" className="chapter editorial performance" aria-labelledby="performance-title">
           <div className="eyebrow"><span className="red-line" /> 02 / PERFORMANCE</div>
           <h2 id="performance-title"><Line>Motion.</Line><Line><em>Before movement.</em></Line></h2>
           <p>A low stance. A purposeful proportion.<br />The visual expression of energy, held still.</p>
           <div className="chapter-note"><span>A DESIGN EXPLORATION</span><span>NO PERFORMANCE CLAIMS</span></div>
-          <img className="mobile-car" src={assetPath('/images/performance.webp')} alt="Low rear three-quarter view of the concept car" loading="lazy" />
+          <img className="mobile-car" src={assetPath(activeCar.photos[2])} alt={`${activeCar.name}, rear three-quarter view`} loading="lazy" />
         </section>
         <section id="details" className="chapter editorial details" aria-labelledby="details-title">
           <div className="eyebrow"><span className="red-line" /> 03 / DETAILS</div>
           <h2 id="details-title"><Line>The closer</Line><Line><em>you look.</em></Line></h2>
           <p>Graphite surfaces meet a precise edge of light.<br />A quiet dialogue between material and form.</p>
           <div className="chapter-note detail-note"><span>MATERIAL STUDY</span><span>GRAPHITE / LIGHT / SHADOW</span></div>
-          <img className="mobile-car" src={assetPath('/images/details.webp')} alt="Close studio framing of the front bodywork and wheel" loading="lazy" />
+          <img className="mobile-car" src={assetPath(activeCar.photos[3])} alt={`${activeCar.name}, detail view`} loading="lazy" />
         </section>
       </div>
       <nav className="chapter-nav" aria-label="Concept chapters">
@@ -232,6 +269,7 @@ export default function Experience() {
           <span className="nav-label">{name === 'Hero' ? 'INTRO' : name.toUpperCase()}</span><span className="nav-rule" /><span className="nav-number">0{index + 1}</span>
         </button>)}
       </nav>
+      {live && !assetFailed && <CarSelector cars={availableCars} activeId={activeCar.id} requestedId={requestedId} error={selectionError} onSelect={selectCar} />}
       <div className="stage-footer">
         <span>FICTIONAL CONCEPT / PORTFOLIO DEMO</span>
         <span className="scene-status" role="status">{desktop && (!prefersReducedMotion || motionOverride) && status === 'fallback' ? 'CINEMATIC STUDIO / IMAGE SEQUENCE' : live ? (status === 'ready' ? 'LIVE 3D EXPERIENCE' : 'LOADING 3D / STUDIO VIEW') : 'STUDIO EDITION'}</span>
@@ -239,7 +277,7 @@ export default function Experience() {
       </div>
     </div>
     <section id="final" className="final-section" aria-labelledby="final-title">
-      <img src={assetPath('/images/hero.webp')} alt="The graphite concept in its studio setting" loading="lazy" />
+      <img src={assetPath(activeCar.photos[0])} alt={`${activeCar.name} in the studio`} loading="lazy" />
       <div className="final-content">
         <div className="eyebrow"><span className="red-line" /> THE STUDY CONTINUES</div>
         <h2 id="final-title"><Line>Leave an</Line><Line><em>impression.</em></Line></h2>
@@ -248,7 +286,7 @@ export default function Experience() {
       <footer className="final-footer">
         <span className="wordmark">N<span className="mark-slash">/</span> NOCTURNE</span>
         <p>An independent, fictional automotive study.<br />Not affiliated with a vehicle manufacturer.</p>
-        <details className="credits"><summary>ASSET CREDITS +</summary><p>“Car Concept” by Eric Chadwick, © 2024 Darmstadt Graphics Group GmbH. <a href="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CarConcept">Source</a> · <a href={assetPath('/licenses/carconcept-CC-BY-4.0.txt')}>CC BY 4.0</a>. Modified: marks and original textures removed; materials replaced; normalized and optimized. No endorsement implied.</p></details>
+        <details className="credits"><summary>ASSET CREDITS +</summary>{activeCar.id === 'studio-concept' ? <p>“Car Concept” by Eric Chadwick, © 2024 Darmstadt Graphics Group GmbH. <a href="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CarConcept">Source</a> · <a href={assetPath('/licenses/carconcept-CC-BY-4.0.txt')}>CC BY 4.0</a>. Modified: marks and original textures removed; materials replaced; normalized and optimized. No endorsement implied.</p> : <p><a href={activeCar.credit.url}>{activeCar.credit.label}</a> · <a href={activeCar.credit.licenseUrl.startsWith('/') ? assetPath(activeCar.credit.licenseUrl) : activeCar.credit.licenseUrl}>{activeCar.credit.license}</a>. No manufacturer affiliation or endorsement.</p>}</details>
       </footer>
     </section>
   </main>;
