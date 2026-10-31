@@ -41,9 +41,12 @@ svg { display: block; }
 .scene-layer { position: absolute; inset: 0; pointer-events: none; }
 .scene-layer canvas { opacity: 0; transition: opacity .85s ease; }
 .scene-layer.scene-ready canvas { opacity: 1; }
-.scene-poster { position: absolute; width: 100%; height: 100%; object-fit: cover; transition: opacity .85s ease; }
-.scene-ready .scene-poster { opacity: 0; }
-.stage-vignette { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, #0c0d0f65, transparent 58%), linear-gradient(0deg, #0c0d0f 0%, transparent 23%, transparent 74%, #0c0d0f75); }
+.poster-sequence { position: absolute; inset: 0; overflow: hidden; transition: opacity .85s ease; }
+.scene-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform-origin: 50% 55%; }
+.scene-poster:first-child { opacity: 1; }
+.scene-ready .poster-sequence { opacity: 0; }
+.stage-vignette { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, #0c0d0fb0, #0c0d0f20 55%, transparent 75%), linear-gradient(0deg, #0c0d0f 0%, transparent 28%, transparent 74%, #0c0d0f75); }
+.stage-vignette::after { content: ''; position: absolute; inset: 0; opacity: var(--shade-right, 0); background: linear-gradient(270deg, #0c0d0fc0, transparent 65%); }
 .chapter-grid { position: relative; z-index: 2; display: grid; min-height: 100svh; pointer-events: none; }
 .chapter { grid-area: 1 / 1; position: relative; min-height: 100svh; padding: 176px var(--gutter) 116px; pointer-events: none; }
 .chapter button, .chapter a { pointer-events: auto; }

@@ -11,6 +11,7 @@ import { useMotionPreference } from '@/lib/useMotionPreference';
 
 const VehicleScene = dynamic(() => import('./VehicleScene'), { ssr: false });
 const chapters = ['Hero', 'Design', 'Performance', 'Details'];
+const stills = ['hero', 'design', 'performance', 'details', 'hero'];
 // Navigation lands in the composed hold, after the camera/text transition.
 const chapterTimes = [0, 1.5, 2.9, 4.45];
 const storyDuration = 5.4;
@@ -85,6 +86,9 @@ export default function Experience() {
       setLive(supported);
       gsap.set(studio, { ...poses[0], opening: .16 });
       const panels = gsap.utils.toArray<HTMLElement>('.chapter', root.current);
+      const posters = gsap.utils.toArray<HTMLElement>('.scene-poster', root.current);
+      gsap.set(posters, { opacity: 0, scale: 1.08, xPercent: 0, yPercent: 0 });
+      gsap.set(posters[0], { opacity: 1, scale: 1.02 });
       gsap.set(panels, { autoAlpha: 0, y: 0 });
       gsap.set(panels[0], { autoAlpha: 1 });
 
@@ -104,7 +108,15 @@ export default function Experience() {
       chapterTimes.forEach((time, index) => timeline.addLabel(chapters[index].toLowerCase(), time));
       const starts = [.45, 1.8, 3.25];
       const durations = [.75, .8, .85];
+      // The poster timeline runs independently of WebGL. Keep all frames mounted
+      // so the browser can load upcoming views before their transition.
+      timeline.to(posters[0], { scale: 1.09, xPercent: 1, duration: 1.2, ease: 'sine.inOut' }, 0);
       starts.forEach((start, index) => {
+        const incoming = posters[index + 1];
+        timeline.to(incoming, { opacity: 1, duration: .5, ease: 'sine.inOut' }, start + .1);
+        timeline.to(incoming, { scale: 1.01, xPercent: index === 1 ? -1 : 1, duration: 1.45, ease: 'sine.inOut' }, start);
+        timeline.to(posters[index], { opacity: 0, duration: .3 }, start + .5);
+        timeline.to('.stage-vignette', { '--shade-right': index === 1 ? 1 : 0, duration: .5, ease: 'sine.inOut' }, start);
         timeline.to(studio, { ...poses[index + 1], duration: durations[index], ease: 'sine.inOut', onUpdate: () => draw.current() }, start);
         timeline.to(panels[index], { autoAlpha: 0, y: -20, duration: .22, ease: 'power2.in' }, start + .3);
         timeline.fromTo(panels[index + 1], { autoAlpha: 0, y: 0 }, { autoAlpha: 1, duration: .3 }, start + durations[index] - .22);
@@ -112,6 +124,7 @@ export default function Experience() {
         timeline.fromTo(panels[index + 1].querySelectorAll('.chapter-note'), { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: .25 }, start + durations[index] + .05);
       });
       timeline.to(studio, { ...poses[4], duration: .8, ease: 'sine.inOut', onUpdate: () => draw.current() }, storyDuration - .8);
+      timeline.to(posters[4], { opacity: 1, scale: 1, duration: .8, ease: 'sine.inOut' }, storyDuration - .8);
       timeline.to(panels[3], { autoAlpha: 0, y: -12, duration: .3 }, storyDuration - .3);
 
       // A short entrance, independent of model download time. No blocking loader.
@@ -155,6 +168,11 @@ export default function Experience() {
           yPercent: 110, duration: .85, stagger: .08, ease: 'power3.out',
           scrollTrigger: { trigger: panel, start: 'top 82%', once: true },
         });
+        const image = panel.querySelector('.mobile-car');
+        if (image) gsap.fromTo(image, { scale: 1.06, yPercent: 3 }, {
+          scale: 1, yPercent: -3, ease: 'none',
+          scrollTrigger: { trigger: panel, start: 'top bottom', end: 'bottom top', scrub: .3 },
+        });
       }
     });
     return () => { window.removeEventListener('pagehide', remember); media.revert(); };
@@ -184,7 +202,9 @@ export default function Experience() {
     </header>
     <div ref={stage} className={`experience-stage ${live ? 'is-live' : ''}`}>
       <div role="img" aria-label={`Unbranded graphite concept car — ${chapters[active]} studio view`} className={`scene-layer ${status === 'ready' ? 'scene-ready' : ''}`}>
-        <img className="scene-poster" src={assetPath(`/images/${['hero', 'design', 'performance', 'details'][active]}.webp`)} alt="" fetchPriority="high" />
+        <div className="poster-sequence" aria-hidden="true">
+          {stills.map((name, index) => <img key={`${name}-${index}`} className="scene-poster" src={assetPath(`/images/${name}.webp`)} alt="" fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async" />)}
+        </div>
         {live && !assetFailed && <SceneBoundary onError={onError}><VehicleScene state={studio} register={register} onReady={onReady} onError={onError} /></SceneBoundary>}
       </div>
       <div className="stage-vignette" />
@@ -225,7 +245,7 @@ export default function Experience() {
       </nav>
       <div className="stage-footer">
         <span>FICTIONAL CONCEPT / PORTFOLIO DEMO</span>
-        <span className="scene-status" role="status">{desktop && (!prefersReducedMotion || motionOverride) && status === 'fallback' ? 'STUDIO VIEW / 3D UNAVAILABLE' : live ? (status === 'ready' ? 'LIVE 3D EXPERIENCE' : 'LOADING 3D / STUDIO VIEW') : 'STUDIO EDITION'}</span>
+        <span className="scene-status" role="status">{desktop && (!prefersReducedMotion || motionOverride) && status === 'fallback' ? 'CINEMATIC STUDIO / IMAGE SEQUENCE' : live ? (status === 'ready' ? 'LIVE 3D EXPERIENCE' : 'LOADING 3D / STUDIO VIEW') : 'STUDIO EDITION'}</span>
         <span className="scroll-cue">SCROLL TO DISCOVER <span><Arrow down /></span></span>
       </div>
     </div>
