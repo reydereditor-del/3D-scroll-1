@@ -115,6 +115,19 @@ h1 em { font-size: 1.16em; }
 .credits p { padding-top: 10px; }
 .credits a { text-decoration: underline; text-underline-offset: 3px; }
 
+.car-selector { position: absolute; bottom: 96px; left: 50%; transform: translateX(-50%); z-index: 6; width: min(450px, 42vw); text-align: center; }
+.car-selector-main { display: flex; align-items: center; justify-content: center; gap: 24px; }
+.car-selector-main > button { width: 44px; height: 44px; border: 1px solid #ffffff35; border-radius: 50%; font-size: 26px; transition: background .18s, border-color .18s; }
+.car-selector-main > button:hover:not(:disabled) { background: var(--red); border-color: var(--red); }
+.car-selector button:disabled { cursor: wait; opacity: .45; }
+.car-selector-title { min-width: 165px; display: flex; flex-direction: column; gap: 8px; font-size: 11px; letter-spacing: .13em; text-transform: uppercase; }
+.car-selector-count { font-size: 8px; color: var(--red); font-variant-numeric: tabular-nums; letter-spacing: .2em; }
+.car-selector-options { display: flex; justify-content: center; gap: 12px; margin-top: 10px; }
+.car-selector-options > button { min-height: 36px; padding: 6px 0; border-bottom: 1px solid transparent; font-size: 8px; letter-spacing: .06em; color: var(--muted); }
+.car-selector-options > button[aria-pressed="true"] { color: var(--paper); border-bottom-color: var(--red); }
+.car-selector-status { display: block; min-height: 16px; margin-top: 8px; font-size: 9px; color: var(--muted); }
+@media (max-width: 1100px) { .car-selector { width: min(410px, 44vw); } .car-selector-main { gap: 12px; } }
+
 /* The approved studio composition reserves the left third for type and the
    right two-thirds for the actual 3D vehicle. Smaller type lets the car lead. */
 @media (min-width: 1024px) {

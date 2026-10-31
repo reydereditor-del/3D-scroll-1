@@ -2,12 +2,16 @@
 // These effects intentionally mutate imperative Three.js GPU objects.
 /* eslint-disable react-hooks/immutability */
 import { Canvas, useThree } from '@react-three/fiber';
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import type { CarDefinition } from '@/lib/carCatalog';
+import { normalizeVehicle, disposeVehicle } from '@/lib/vehicleAssets';
+import { AssetRequestGate } from '@/lib/assetRequestGate';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { assetPath } from '@/lib/assetPath';
 import StudioFloor from './StudioFloor';
 import {
-  type Material, Box3, Color, DirectionalLight, Group, Mesh, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial,
+  type Material, Color, DirectionalLight, Group, Mesh, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial,
   PerspectiveCamera, PlaneGeometry, PMREMGenerator, Scene, Vector3,
 } from 'three';
 
@@ -20,37 +24,18 @@ export type StudioState = {
 
 type SceneProps = {
   state: StudioState; register: (update: () => void) => void;
-  onReady: () => void; onError: () => void;
+  car: CarDefinition; redraw: () => void;
+  onReady: (id: string) => void; onLoadError: (id: string) => void; onError: () => void;
 };
 // Studio owns the camera after mount. React chapter updates must not reapply a
 // position sampled midway through a GSAP tween over the imperative camera.
 const initialCamera = { position: [0, 2.45, 10] as [number, number, number], fov: 32, near: .1, far: 250 };
 const rendererOptions = { antialias: true, alpha: true, powerPreference: 'high-performance' as const };
 
-function Vehicle({ onReady, onError }: Pick<SceneProps, 'onReady' | 'onError'>) {
-  const [model, setModel] = useState<Group | null>(null);
-  const { invalidate } = useThree();
-  useEffect(() => {
-    let disposed = false;
-    let loaded: Group | null = null;
-    const dispose = (group: Group) => {
-      const geometries = new Set<Mesh['geometry']>();
-      const materials = new Set<MeshStandardMaterial>();
-      group.traverse(object => {
-        if (!(object instanceof Mesh)) return;
-        geometries.add(object.geometry);
-        for (const material of Array.isArray(object.material) ? object.material : [object.material]) materials.add(material);
-      });
-      geometries.forEach(geometry => geometry.dispose());
-      materials.forEach(material => material.dispose());
-    };
-    new GLTFLoader().load(assetPath('/models/concept.glb'), gltf => {
-      if (disposed) { dispose(gltf.scene); return; }
-      loaded = gltf.scene;
-      loaded.updateMatrixWorld(true);
-      // Use actual vertices: transformed bounding boxes overestimate this GLB.
-      // Its authored lowest point is 0.175 above zero, which made it float.
-      loaded.position.y -= new Box3().setFromObject(loaded, true).min.y;
+function prepareVehicle(loaded: Group, car: CarDefinition) {
+  normalizeVehicle(loaded, car.orientation);
+  // Preserve authored materials, textures, and geometry on the new cars.
+  if (car.materialProfile !== 'concept') return;
       const paint = new Map<MeshStandardMaterial, MeshPhysicalMaterial>();
       loaded.traverse(object => {
         if (!(object instanceof Mesh)) return;
@@ -81,17 +66,54 @@ function Vehicle({ onReady, onError }: Pick<SceneProps, 'onReady' | 'onError'>) 
         object.material = Array.isArray(object.material) ? object.material.map(tune) : tune(object.material);
       });
       paint.forEach((_, original) => original.dispose());
-      setModel(loaded);
-      invalidate();
-    }, undefined, () => { if (!disposed) onError(); });
-    return () => { disposed = true; if (loaded) dispose(loaded); };
-  }, [invalidate, onError]);
-  // Ready means the model has actually committed into the scene graph.
-  useEffect(() => { if (model) { invalidate(); onReady(); } }, [model, invalidate, onReady]);
-  return model ? <primitive object={model} /> : null;
 }
 
-function Studio({ state, register, onError }: Omit<SceneProps, 'onReady'>) {
+function Vehicle({ car, state, redraw, onReady, onLoadError }: Pick<SceneProps, 'car' | 'state' | 'redraw' | 'onReady' | 'onLoadError'>) {
+  const [asset, setAsset] = useState<{ group: Group; car: CarDefinition } | null>(null);
+  const visible = useRef<typeof asset>(null);
+  const [requests] = useState(() => new AssetRequestGate<Group>(disposeVehicle));
+  const { invalidate } = useThree();
+  useEffect(() => {
+    if (visible.current?.car.id === car.id) return;
+    let cancelled = false;
+    let candidate: Group | null = null;
+    let fade: gsap.core.Tween | undefined;
+    requests.load(async () => {
+      const result = await new GLTFLoader().loadAsync(assetPath(car.modelSrc));
+      try { prepareVehicle(result.scene, car); }
+      catch (error) { disposeVehicle(result.scene); throw error; }
+      return result.scene;
+    }).then(group => {
+      if (!group) return;
+      candidate = group;
+      if (cancelled) { disposeVehicle(group); candidate = null; return; }
+      const commit = () => {
+        if (cancelled) return;
+        setAsset({ group, car });
+      };
+      if (visible.current) fade = gsap.to(state, { opening: .08, duration: .25, ease: 'power2.in', onUpdate: redraw, onComplete: commit });
+      else commit();
+    }).catch(() => { if (!cancelled) onLoadError(car.id); });
+    return () => {
+      cancelled = true;
+      requests.cancel();
+      fade?.kill();
+      if (candidate && visible.current?.group !== candidate) disposeVehicle(candidate);
+    };
+  }, [car, state, redraw, requests, onLoadError]);
+  // The old group stays mounted throughout the download. Dispose it only after
+  // React commits the replacement, so there is no empty frame or scroll reset.
+  useLayoutEffect(() => {
+    if (!asset) return;
+    visible.current = asset;
+    onReady(asset.car.id);
+    invalidate();
+    return () => { visible.current = null; disposeVehicle(asset.group); };
+  }, [asset, onReady, invalidate]);
+  return asset ? <primitive object={asset.group} dispose={null} /> : null;
+}
+
+function Studio({ state, register, onError }: Pick<SceneProps, 'state' | 'register' | 'onError'>) {
   const { camera, invalidate, gl, scene, size } = useThree();
   const keyLight = useRef<DirectionalLight>(null);
   const rimLight = useRef<DirectionalLight>(null);
@@ -181,6 +203,6 @@ export default function VehicleScene(props: SceneProps) {
   return <Canvas aria-hidden="true" frameloop="demand" dpr={[1, 1.5]}
     camera={initialCamera} gl={rendererOptions} fallback={null}>
     <Studio state={state} register={props.register} onError={props.onError} />
-    <Suspense fallback={null}><Vehicle onReady={props.onReady} onError={props.onError} /></Suspense>
+    <Suspense fallback={null}><Vehicle car={props.car} state={state} redraw={props.redraw} onReady={props.onReady} onLoadError={props.onLoadError} /></Suspense>
   </Canvas>;
 }
