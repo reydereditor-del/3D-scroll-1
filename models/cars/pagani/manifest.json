@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "encoding": "gzip+base64",
+  "byteLength": 12499188,
+  "sha256": "6a588b97bf2dc99f675cbbc675df5a7509b58b1fcaf85a58b990bf91a54963d9",
+  "parts": [
+    {
+      "file": "part-00.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-01.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-02.b64.txt",
+      "byteLength": 1284448
+    }
+  ]
+}

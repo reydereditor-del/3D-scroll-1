@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "encoding": "gzip+base64",
+  "byteLength": 28699352,
+  "sha256": "c51c795f7e149c22c9706d4eb79fc6ed49ea03830fa2f065cfa6d82bf1a7745b",
+  "parts": [
+    {
+      "file": "part-00.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-01.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-02.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-03.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-04.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-05.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-06.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-07.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-08.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-09.b64.txt",
+      "byteLength": 189443
+    }
+  ]
+}

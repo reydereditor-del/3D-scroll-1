@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "encoding": "gzip+base64",
+  "byteLength": 65467036,
+  "sha256": "ce020ec809acaba9c101bf105744266b655286bf9ede96ed10e0c02cc28fe5e5",
+  "parts": [
+    {
+      "file": "part-00.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-01.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-02.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-03.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-04.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-05.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-06.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-07.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-08.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-09.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-10.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-11.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-12.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-13.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-14.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-15.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-16.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-17.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-18.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-19.b64.txt",
+      "byteLength": 2097152
+    },
+    {
+      "file": "part-20.b64.txt",
+      "byteLength": 1738125
+    }
+  ]
+}
