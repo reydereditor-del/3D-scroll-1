@@ -3,7 +3,7 @@ import type { StudioState } from '@/components/VehicleScene';
 // Approved direction: one dark automotive studio, five existing story beats.
 // Camera motion finishes before each text hold. Angles are unwrapped so the
 // final detail move stays outside the body rather than cutting through it.
-export const chapterTimes = [0, 1.75, 3.65, 5.65];
+export const chapterTimes = [0, 2.05, 3.95, 5.9];
 export const storyDuration = 7.4;
 export const moves = [
   { start: .65, duration: .95, text: 1.42 },
